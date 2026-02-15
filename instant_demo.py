@@ -1,25 +1,16 @@
-"""
-INSTANT Real-Time Demo
-Use webcam for immediate results - perfect for presentations!
-"""
-
 import gradio as gr
 import cv2
 from ultralytics import YOLO
 import numpy as np
 
 # Load model ONCE
-print("⚡ Loading model for real-time detection...")
 model = YOLO("best.pt")
-print("✅ Ready for instant detection!")
 
 def detect_instant(image):
-    """INSTANT detection on single frame - NO WAITING!"""
 
     if image is None:
         return None, "Waiting for image..."
 
-    # Detect on single image - INSTANT!
     results = model.predict(
         image,
         conf=0.25,
@@ -41,7 +32,6 @@ def detect_instant(image):
 # TWO MODES: Webcam (instant) + Video (fast)
 
 def process_video_fast(video):
-    """Fast video processing"""
     if video is None:
         return None, "Upload video"
 
@@ -67,12 +57,9 @@ def process_video_fast(video):
             break
 
         count += 1
-
-        # SPEED: Skip frames
         if count % 4 != 0:
             continue
 
-        # SPEED: Small frame
         small = cv2.resize(frame, (640, 360))
         results = model.predict(small, conf=0.3, verbose=False, imgsz=320)
 
@@ -115,14 +102,12 @@ with gr.Blocks(title="⚡ Real-Time Detection") as demo:
 
             instant_status = gr.Markdown("**Ready!** Upload image or use webcam")
 
-            # Auto-detect on change
             webcam_input.change(
                 fn=detect_instant,
                 inputs=webcam_input,
                 outputs=[instant_output, instant_status]
             )
 
-        # FAST VIDEO TAB
         with gr.Tab("🎬 Fast Video"):
             gr.Markdown("### Upload short video for fast processing")
 
@@ -147,6 +132,7 @@ with gr.Blocks(title="⚡ Real-Time Detection") as demo:
 - **Instant Mode:** Use webcam or upload single frame - NO WAITING!
 - **Fast Video:** Keep videos under 30 seconds for quick demo
 - **Speed optimizations:** Frame skipping + small resolution = FAST! ⚡
-    """)
+    """
+
 
 demo.launch(share=True)
