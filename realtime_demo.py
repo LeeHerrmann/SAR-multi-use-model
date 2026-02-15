@@ -1,13 +1,4 @@
-"""
-EXTREME SPEED DEMO MODE
-⚠️ TRADES ACCURACY FOR SPEED - Perfect for fast demos!
 
-Speed: 10-20x FASTER than normal
-Accuracy: ~70-80% (vs 85-92% normal)
-
-Use this for: Quick demos, presentations, "wow factor"
-Don't use for: Actual rescue operations
-"""
 
 import gradio as gr
 import cv2
@@ -15,21 +6,9 @@ from ultralytics import YOLO
 import tempfile
 import numpy as np
 
-print("⚡ EXTREME SPEED MODE - Loading model...")
 model = YOLO("best.pt")
-print("✅ Ready!\n")
-
-print("="*70)
-print("⚠️  SPEED vs ACCURACY TRADE-OFF")
-print("="*70)
-print("This demo prioritizes SPEED over accuracy:")
-print("  • Normal mode:  5-10 seconds, 85-92% accurate")
-print("  • EXTREME mode: 0.5-1 second,  70-80% accurate ⚡")
-print("\nPerfect for demos! Not for production!\n")
-print("="*70 + "\n")
 
 def extreme_speed_image(image):
-    """INSTANT - processes in ~0.3 seconds!"""
     if image is None:
         return None, "⚡ Ready for instant detection!"
 
@@ -69,7 +48,6 @@ def extreme_speed_image(image):
     return annotated, f"**⚡ FOUND {num}!** (Processed in ~0.3s)"
 
 def extreme_speed_video(video):
-    """EXTREME: Process in ~20% of normal time"""
     if video is None:
         return None, "Upload video for EXTREME speed processing!"
 
@@ -80,10 +58,8 @@ def extreme_speed_video(video):
     w = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
     h = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
 
-    # EXTREME: Output at 480x270 (YouTube 270p)
     ow, oh = 480, 270
 
-    # EXTREME: 6 FPS output (cinematic look!)
     out_fps = 6
 
     fourcc = cv2.VideoWriter_fourcc(*'mp4v')
@@ -92,7 +68,6 @@ def extreme_speed_video(video):
     count = 0
     total = 0
 
-    # EXTREME: Process every 8th frame!
     SKIP = 8
 
     print(f"\n⚡ Processing with {SKIP}x frame skip...")
@@ -107,7 +82,6 @@ def extreme_speed_video(video):
         if count % SKIP != 0:
             continue
 
-        # EXTREME: 160x90 processing!
         micro = cv2.resize(frame, (160, 90))
 
         results = model.predict(
@@ -119,18 +93,15 @@ def extreme_speed_video(video):
             max_det=10
         )
 
-        # Simple visualization
         annotated = results[0].plot()
         annotated = cv2.resize(annotated, (w, h))
 
         num = len(results[0].boxes)
         total += num
 
-        # Big text
         cv2.putText(annotated, f"PEOPLE: {num}", (30, 80),
                    cv2.FONT_HERSHEY_SIMPLEX, 2.5, (0, 255, 0), 5)
 
-        # Small output
         small = cv2.resize(annotated, (ow, oh))
         out.write(small)
 
